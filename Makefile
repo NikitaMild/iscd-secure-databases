@@ -13,6 +13,8 @@ dummy/starters: dummy/run/start_instance.sh
 dummy/docker: Dockerfile docker-compose.yml mysql | dummy
 	docker-compose build
 	touch dummy/docker
+	touch dummy/supervisor.sh
+	touch dummy/run/*
 
 dummy/supervisor.sh: supervisor.sh | dummy
 	docker cp $< $(CONTAINER):/usr/local/bin/$<
