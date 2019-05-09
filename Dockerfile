@@ -21,8 +21,10 @@ COPY supervisor.sh /usr/local/bin/supervisor.sh
 RUN chown mysql:mysql /usr/local/bin/supervisor.sh
 RUN chmod 544 /usr/local/bin/supervisor.sh
 
-# Note how permissions of host are kept. This means you need to chmod 777 the files.
+# starter script installation
 COPY ./run /opt/run
+RUN chown mysql:mysql /opt/run/*
+RUN chmod 544 /opt/run/*
 
 USER mysql
 ENTRYPOINT ["/usr/local/bin/supervisor.sh"]
