@@ -1,13 +1,6 @@
 #!/bin/bash
 
-LOG=/var/log/supervisor
 RUN=/opt/run/
-
-if [ -f "${LOG}" ]; then
-	echo > "${LOG}";
-else
-	touch "${LOG}";
-fi
 
 if find "${RUN}" -mindepth 1 -print -quit 2>/dev/null | grep -q .; then
 	echo "Starting supervisor";
@@ -16,9 +9,14 @@ else
 	exit 0;
 fi
 
+i=0
 for file in "${RUN}/"*; do
 	echo "Starting ${file}"
-	"${file}" >> "${LOG}" &
+	"${file}" &
+	pids[${i}]=$!
+	i=$(( i + 1 ))
 done
 
-tail -f "${LOG}"
+for pid in ${pids[*]}; do
+	wait $pid;
+done

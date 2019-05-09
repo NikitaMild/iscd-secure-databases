@@ -18,10 +18,8 @@ EXPOSE 3306
 # Supervisor installation and configuration
 RUN mkdir /opt/run
 COPY supervisor.sh /usr/local/bin/supervisor.sh
-RUN touch /var/log/supervisor
-RUN chown mysql:mysql /usr/local/bin/supervisor.sh /var/log/supervisor
+RUN chown mysql:mysql /usr/local/bin/supervisor.sh
 RUN chmod 544 /usr/local/bin/supervisor.sh
-RUN chmod 644 /var/log/supervisor
 
 # Note how permissions of host are kept. This means you need to chmod 777 the files.
 COPY ./run /opt/run
