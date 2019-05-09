@@ -1,4 +1,5 @@
 CONTAINER = iscdsecuredatabases_ubuntu-mysql_1
+STARTERS = run/start_instance.sh
 
 .PHONY: run
 run: dummy/docker dummy/supervisor.sh dummy/starters
@@ -7,14 +8,14 @@ run: dummy/docker dummy/supervisor.sh dummy/starters
 .PHONY: build
 build: dummy/docker
 
-dummy/starters: dummy/run/start_instance.sh
+dummy/starters: $(addprefix dummy/,$(STARTERS))
 	touch dummy/starters
 
 dummy/docker: Dockerfile docker-compose.yml mysql | dummy
 	docker-compose build
 	touch dummy/docker
 	touch dummy/supervisor.sh
-	touch dummy/run/*
+	touch dummy/starters
 
 dummy/supervisor.sh: supervisor.sh | dummy
 	docker cp $< $(CONTAINER):/usr/local/bin/$<
