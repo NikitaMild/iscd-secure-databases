@@ -45,3 +45,39 @@ revoke all privileges
 	on *.*
 	from ''@'%'
 ;
+
+
+-- Tables --
+
+-- firewall will be my pok et mon
+use firewall_logs;
+create table if not exists stream_logs
+	( id           INTEGER AUTO_INCREMENT
+	, service_name VARCHAR(64)
+	, start_time   DATETIME
+	, source_addr  VARCHAR(15)
+	, source_port  SMALLINT
+	, dest_addr    VARCHAR(15)
+	, dest_port    SMALLINT
+	, stream_data  BLOB
+	, PRIMARY KEY (id)
+	)
+;
+
+-- passwords
+use password_hashes;
+create table if not exists yandex
+	(email         VARCHAR(256)
+	,password_hash VARCHAR(256) CHARACTER SET binary
+	)
+;
+create table if not exists google
+	(email         VARCHAR(256)
+	,password_hash VARCHAR(256)
+	)
+;
+create table if not exists mail_ru
+	(email         VARCHAR(256)
+	,password_hash VARCHAR(256)
+	)
+;
