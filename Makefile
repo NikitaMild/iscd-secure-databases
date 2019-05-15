@@ -13,6 +13,15 @@ build: dummy/docker dummy/supervisor.sh dummy/starters dummy/options
 kill:
 	docker-compose exec -u root ubuntu-mysql /usr/local/mysql/bin/mysqladmin shutdown -S /var/mysql/socket1
 
+.PHONY: connect
+connect:
+	docker-compose exec -u root ubuntu-mysql /usr/local/mysql/bin/mysql -S /var/mysql/socket1
+
+.PHONY: run-*.sql
+run-%.sql: %.sql
+	docker cp $< $(CONTAINER):/tmp/$<
+	docker exec -u root $(CONTAINER) sh -c '/usr/local/mysql/bin/mysql -t -v -S /var/mysql/socket1 </tmp/$<'
+
 dummy/starters: $(addprefix dummy/,$(STARTERS))
 	touch dummy/starters
 dummy/options: $(addprefix dummy/,$(OPTIONS))
