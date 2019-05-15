@@ -6,6 +6,9 @@ create schema if not exists password_hashes;
 
 create user if not exists 'admin'@'%'
 	identified by 'changeme'
+	require SUBJECT '/C=RU/ST=Tomskaya obl./L=Tomsk/
+	                 O=Tomsk State University/
+	                 CN=mofj/emailAddress=morj@example.com'
 ;
 grant alter, create, delete, drop, insert, select, update
 	on *.*
@@ -13,29 +16,32 @@ grant alter, create, delete, drop, insert, select, update
 ;
 
 
-create user if not exists 'firewallAdmin'@'localhost'
+create user if not exists 'firewallAdmin'@'%'
 	identified by 'changeme'
+	require SSL
 ;
 grant all privileges
 	on firewall_logs.*
-	to 'firewallAdmin'@'localhost'
+	to 'firewallAdmin'@'%'
 	with grant option
 ;
 
 create user if not exists 'pwdLoader'@'%'
 	identified by 'changeme'
+	require ISSUER '/C=RU/ST=Tomskaya obl./L=Tomsk/O=TUSUR/CN=fryngies/emailAddress=fryngies@example.com'
 ;
 grant insert
 	on password_hashes.*
 	to 'pwdLoader'@'%'
 ;
 
-create user if not exists 'pwdAnalyst'@'localhost'
+create user if not exists 'pwdAnalyst'@'%'
 	identified by 'changeme'
+	require X509
 ;
 grant select
 	on password_hashes.*
-	to 'pwdAnalyst'@'localhost'
+	to 'pwdAnalyst'@'%'
 	with grant option
 ;
 
