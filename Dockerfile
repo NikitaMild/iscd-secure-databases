@@ -22,6 +22,7 @@ RUN chmod 770 /var/mysql/datadir1
 COPY certs/ca.crt /var/mysql/ca.crt
 COPY certs/server.crt /var/mysql/server.crt
 COPY certs/server-key.pem /var/mysql/server-key.pem
+RUN chown mysql:mysql /var/mysql/ca.crt /var/mysql/server.crt /var/mysql/server-key.pem
 RUN chmod 600 /var/mysql/ca.crt /var/mysql/server.crt /var/mysql/server-key.pem
 
 # Mysql primary configuration
