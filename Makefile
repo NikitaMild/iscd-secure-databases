@@ -1,4 +1,5 @@
 CONTAINER = iscdsecuredatabases_ubuntu-mysql_1
+UNIT = ubuntu-mysql
 STARTERS = run/start_instance.sh
 OPTIONS = instance1.cnf
 
@@ -11,11 +12,15 @@ build: dummy/docker dummy/supervisor.sh dummy/starters dummy/options
 
 .PHONY: kill
 kill:
-	docker-compose exec -u root ubuntu-mysql /usr/local/mysql/bin/mysqladmin shutdown -S /var/mysql/socket1
+	docker-compose exec -u root $(UNIT) /usr/local/mysql/bin/mysqladmin shutdown -S /var/mysql/socket1
+
+.PHONY: shell
+shell:
+	docker-compose exec -u root $(UNIT) /bin/bash
 
 .PHONY: connect
 connect:
-	docker-compose exec -u root ubuntu-mysql /usr/local/mysql/bin/mysql -S /var/mysql/socket1
+	docker-compose exec -u root $(UNIT) /usr/local/mysql/bin/mysql -S /var/mysql/socket1
 
 .PHONY: run-*.sql
 run-%.sql: %.sql
