@@ -43,4 +43,5 @@ create user if not exists ''@'%'
 ;
 revoke all privileges
 	on *.*
-	from ''@''
+	from ''@'%'
+;
