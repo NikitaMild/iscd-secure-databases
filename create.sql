@@ -4,11 +4,10 @@ create schema if not exists password_hashes;
 
 -- Users and permissions --
 
+drop user if exists 'admin'@'%';
 create user if not exists 'admin'@'%'
 	identified by 'changeme'
-	require SUBJECT '/C=RU/ST=Tomskaya obl./L=Tomsk/
-	                 O=Tomsk State University/
-	                 CN=morj/emailAddress=morj@example.com'
+	require SUBJECT '/C=RU/ST=Tomskaya obl./L=Tomsk/O=Tomsk State University/O=ISCD/OU=ISCD Secure Databases/CN=morj/emailAddress=morj@example.com'
 ;
 grant alter, create, delete, drop, insert, select, update
 	on *.*
