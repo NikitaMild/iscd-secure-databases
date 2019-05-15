@@ -66,7 +66,10 @@ $(CAKEY): | certs
 	openssl genrsa 2048 > $@
 # self-signed certificate from this key
 $(CACERT): $(CAKEY) $(SSLCONF)
-	openssl req -new -x509 -days 366 -key $< -out $@ -config openssl.cnf
+	openssl req -new -x509 -days 366 -key $< -out $@ -config $(SSLCONF)
+# certificate for second user
+certs/pwdLoader.crt: certs/second-issuer.crt certs/pwdLoader-req.pem | certs
+	openssl x509 -req -in certs/pwdLoader-req.pem -days 366 -CA $< -CAkey certs/second-issuer-key.pem -set_serial 01 -out $@
 
 certs/%-req.pem: $(SSLCONF)
 	openssl req -newkey rsa:2048 -days 366 -keyout certs/$*-key.pem -out certs/$*-req.pem -config $(SSLCONF)
