@@ -8,7 +8,7 @@ create user if not exists 'admin'@'%'
 	identified by 'changeme'
 	require SUBJECT '/C=RU/ST=Tomskaya obl./L=Tomsk/
 	                 O=Tomsk State University/
-	                 CN=mofj/emailAddress=morj@example.com'
+	                 CN=morj/emailAddress=morj@example.com'
 ;
 grant alter, create, delete, drop, insert, select, update
 	on *.*
