@@ -16,7 +16,13 @@ RUN mkdir /etc/mysql
 COPY instance1.cnf /etc/mysql/
 RUN mkdir -p /var/mysql/datadir1
 RUN chown --recursive mysql:mysql /var/mysql
-run chmod 770 /var/mysql/datadir1
+RUN chmod 770 /var/mysql/datadir1
+
+# Install mysql ssl stuffs
+COPY certs/ca.crt /var/mysql/ca.crt
+COPY certs/server.crt /var/mysql/server.crt
+COPY certs/server-key.pem /var/mysql/server-key.pem
+RUN chmod 600 /var/mysql/ca.crt /var/mysql/server.crt /var/mysql/server-key.pem
 
 # Mysql primary configuration
 RUN /usr/local/mysql/bin/mysqld --defaults-file=/etc/mysql/instance1.cnf --initialize-insecure --user=mysql --skip-name-resolve

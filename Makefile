@@ -32,7 +32,7 @@ dummy/starters: $(addprefix dummy/,$(STARTERS))
 dummy/options: $(addprefix dummy/,$(OPTIONS))
 	touch dummy/options
 
-dummy/docker: Dockerfile docker-compose.yml mysql | dummy
+dummy/docker: Dockerfile docker-compose.yml mysql $(CACERT) $(SERVER_CERT) $(SERVER_KEY) | dummy
 	docker-compose build
 	touch dummy/docker
 	touch dummy/supervisor.sh
@@ -50,6 +50,32 @@ dummy/%.cnf: %.cnf | dummy
 	touch $@
 
 
+# Openssl stuffs
+
+CACERT = certs/ca.crt
+CAKEY = certs/ca-key.pem
+SERVER_CERT = certs/server.crt
+SERVER_KEY = certs/server-key.pem
+SSLCONF = openssl.cnf
+
+clean-certificates: | certs
+	rm certs/*
+
+# root key
+$(CAKEY): | certs
+	openssl genrsa 2048 > $@
+# self-signed certificate from this key
+$(CACERT): $(CAKEY) $(SSLCONF)
+	openssl req -new -x509 -days 366 -key $< -out $@ -config openssl.cnf
+
+certs/%-req.pem: $(SSLCONF)
+	openssl req -newkey rsa:2048 -days 366 -keyout certs/$*-key.pem -out certs/$*-req.pem -config $(SSLCONF)
+	openssl rsa -in certs/$*-key.pem -out certs/$*-key.pem
+certs/%.crt: certs/%-req.pem $(CAKEY) $(CACERT)
+	openssl x509 -req -in $< -days 366 -CA $(CACERT) -CAkey $(CAKEY) -set_serial 01 -out $@
+
+
+
 # Directory targets
 
 mysql:
@@ -60,3 +86,5 @@ dummy:
 	mkdir -p dummy
 dummy/run: | dummy
 	mkdir -p dummy/run
+certs:
+	mkdir -p certs
