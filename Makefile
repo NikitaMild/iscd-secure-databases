@@ -11,7 +11,7 @@ build: dummy/docker dummy/supervisor.sh dummy/starters dummy/options
 
 .PHONY: kill
 kill:
-	docker-compose exec -u root ubuntu-mysql /usr/local/mysql/bin/mysqladmin shutdown
+	docker-compose exec -u root ubuntu-mysql /usr/local/mysql/bin/mysqladmin shutdown -S /var/mysql/socket1
 
 dummy/starters: $(addprefix dummy/,$(STARTERS))
 	touch dummy/starters

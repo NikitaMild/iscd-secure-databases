@@ -1,2 +1,5 @@
 [mysqld]
 port=3306
+socket=/var/mysql/socket1
+datadir=/var/mysql/datadir1
+pid-file=/var/mysql/mysql-inst-1.pid

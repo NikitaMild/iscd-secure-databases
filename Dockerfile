@@ -11,14 +11,16 @@ RUN useradd -r -g mysql mysql
 RUN chown mysql:mysql /usr/local/mysql
 RUN chmod 754 /usr/local/mysql
 
-# Mysql primary configuration
-RUN /usr/local/mysql/bin/mysqld --initialize-insecure --user=mysql --skip-name-resolve
-EXPOSE 3306
-EXPOSE 3307
-
 # Install mysql configs
 RUN mkdir /etc/mysql
 COPY instance1.cnf /etc/mysql/
+RUN mkdir -p /var/mysql/datadir1
+RUN chown --recursive mysql:mysql /var/mysql
+run chmod 770 /var/mysql/datadir1
+
+# Mysql primary configuration
+RUN /usr/local/mysql/bin/mysqld --defaults-file=/etc/mysql/instance1.cnf --initialize-insecure --user=mysql --skip-name-resolve
+EXPOSE 3306
 
 # Supervisor installation and configuration
 RUN mkdir /opt/run
