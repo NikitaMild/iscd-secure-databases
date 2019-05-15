@@ -26,5 +26,4 @@ COPY ./run /opt/run
 RUN chown mysql:mysql /opt/run/*
 RUN chmod 544 /opt/run/*
 
-USER mysql
 ENTRYPOINT ["/usr/local/bin/supervisor.sh"]

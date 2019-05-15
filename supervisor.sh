@@ -10,9 +10,12 @@ else
 fi
 
 i=0
-for file in "${RUN}/"*; do
+for file in "${RUN}"*; do
+	chown mysql:mysql ${file}
+	chmod 544 ${file}
 	echo "Starting ${file}"
-	"${file}" &
+
+	su mysql -c "${file}" &
 	pids[${i}]=$!
 	i=$(( i + 1 ))
 done

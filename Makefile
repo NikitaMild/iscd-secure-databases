@@ -12,16 +12,18 @@ dummy/starters: $(addprefix dummy/,$(STARTERS))
 	touch dummy/starters
 
 dummy/docker: Dockerfile docker-compose.yml mysql | dummy
-	#docker-compose build
+	docker-compose build
 	touch dummy/docker
 	touch dummy/supervisor.sh
 
 dummy/supervisor.sh: supervisor.sh | dummy
-	fakeroot -- sh -c "chown mysql:mysql $< && chmod 544 $< && docker cp $< $(CONTAINER):/usr/local/bin/$<"
+# 	fakeroot -- sh -c "chown -R 999 $< && chgrp -R 1000 $< && chmod 555 $< && docker cp -a $< $(CONTAINER):/usr/local/bin/$<"
+	docker cp -a $< $(CONTAINER):/usr/local/bin/$<
 	touch $@
 
 dummy/run/%.sh: run/%.sh | dummy/run
-	fakeroot -- sh -c "chown mysql:mysql $< && chmod 544 $< && docker cp $< $(CONTAINER):/opt/$<"
+# 	fakeroot -- sh -c "chown -R 999 $< && chgrp -R 1000 $< && chmod 777 $< && docker cp -a $< $(CONTAINER):/opt/$<"
+	docker cp -a $< $(CONTAINER):/opt/$<
 	touch $@
 
 
