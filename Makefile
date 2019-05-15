@@ -1,6 +1,6 @@
 CONTAINER = iscdsecuredatabases_ubuntu-mysql_1
-STARTERS = run/start_instance.sh
-OPTIONS = instance1.cnf
+STARTERS = run/start_instance.sh run/start_second.sh
+OPTIONS = instance1.cnf instance2.cnf
 
 .PHONY: run
 run: dummy/docker dummy/supervisor.sh dummy/starters dummy/options
@@ -11,7 +11,8 @@ build: dummy/docker dummy/supervisor.sh dummy/starters dummy/options
 
 .PHONY: kill
 kill:
-	docker-compose exec -u root ubuntu-mysql /usr/local/mysql/bin/mysqladmin shutdown
+	docker-compose exec -u root ubuntu-mysql /usr/local/mysql/bin/mysqladmin shutdown -S /var/mysql/socket1
+	docker-compose exec -u root ubuntu-mysql /usr/local/mysql/bin/mysqladmin shutdown -S /var/mysql/socket2
 
 dummy/starters: $(addprefix dummy/,$(STARTERS))
 	touch dummy/starters
