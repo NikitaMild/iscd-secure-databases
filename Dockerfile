@@ -14,6 +14,11 @@ RUN chmod 754 /usr/local/mysql
 # Mysql primary configuration
 RUN /usr/local/mysql/bin/mysqld --initialize-insecure --user=mysql --skip-name-resolve
 EXPOSE 3306
+EXPOSE 3307
+
+# Install mysql configs
+RUN mkdir /etc/mysql
+COPY instance1.cnf /etc/mysql/
 
 # Supervisor installation and configuration
 RUN mkdir /opt/run

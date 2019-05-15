@@ -1,15 +1,22 @@
 CONTAINER = iscdsecuredatabases_ubuntu-mysql_1
 STARTERS = run/start_instance.sh
+OPTIONS = instance1.cnf
 
 .PHONY: run
-run: dummy/docker dummy/supervisor.sh dummy/starters
+run: dummy/docker dummy/supervisor.sh dummy/starters dummy/options
 	docker-compose up
 
 .PHONY: build
-build: dummy/docker
+build: dummy/docker dummy/supervisor.sh dummy/starters dummy/options
+
+.PHONY: kill
+kill:
+	docker-compose exec -u root ubuntu-mysql /usr/local/mysql/bin/mysqladmin shutdown
 
 dummy/starters: $(addprefix dummy/,$(STARTERS))
 	touch dummy/starters
+dummy/options: $(addprefix dummy/,$(OPTIONS))
+	touch dummy/options
 
 dummy/docker: Dockerfile docker-compose.yml mysql | dummy
 	docker-compose build
@@ -17,13 +24,15 @@ dummy/docker: Dockerfile docker-compose.yml mysql | dummy
 	touch dummy/supervisor.sh
 
 dummy/supervisor.sh: supervisor.sh | dummy
-# 	fakeroot -- sh -c "chown -R 999 $< && chgrp -R 1000 $< && chmod 555 $< && docker cp -a $< $(CONTAINER):/usr/local/bin/$<"
 	docker cp -a $< $(CONTAINER):/usr/local/bin/$<
 	touch $@
 
 dummy/run/%.sh: run/%.sh | dummy/run
-# 	fakeroot -- sh -c "chown -R 999 $< && chgrp -R 1000 $< && chmod 777 $< && docker cp -a $< $(CONTAINER):/opt/$<"
 	docker cp -a $< $(CONTAINER):/opt/$<
+	touch $@
+
+dummy/%.cnf: %.cnf | dummy
+	docker cp $< $(CONTAINER):/etc/mysql/$<
 	touch $@
 
 
