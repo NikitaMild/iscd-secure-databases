@@ -8,6 +8,7 @@ drop user if exists 'admin'@'%';
 create user if not exists 'admin'@'%'
 	identified by 'changeme'
 	require SUBJECT '/C=RU/ST=Tomskaya obl./L=Tomsk/O=Tomsk State University/O=ISCD/OU=ISCD Secure Databases/CN=morj/emailAddress=morj@example.com'
+	    AND ISSUER '/C=RU/ST=Tomskaya obl./L=Tomsk/O=Tomsk State University/O=ISCD/OU=ISCD Secure Databases/CN=issuer/emailAddress=issuer@mysql.org'
 ;
 grant alter, create, delete, drop, insert, select, update
 	on *.*
@@ -25,9 +26,10 @@ grant all privileges
 	with grant option
 ;
 
+drop user if exists 'pwdLoader'@'%';
 create user if not exists 'pwdLoader'@'%'
 	identified by 'changeme'
-	require ISSUER '/C=RU/ST=Tomskaya obl./L=Tomsk/O=TUSUR/CN=fryngies/emailAddress=fryngies@example.com'
+	require ISSUER '/C=RU/ST=Tomskaya obl./L=Tomsk/O=Tomsk State University/O=ISCD/OU=ISCD Secure Databases/CN=fraud/emailAddress=fraud@mysql.org'
 ;
 grant insert
 	on password_hashes.*
